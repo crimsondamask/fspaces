@@ -1,5 +1,7 @@
 extern crate glob;
+extern crate colored;
 
+use colored::Colorize;
 use std::error::Error;
 use std::str;
 use std::path::PathBuf;
@@ -42,10 +44,15 @@ fn filenames(pattern: &str) -> Vec<PathBuf> {
 }
 
 fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
+
+    let mut count = 0;
+
     if filenames.len() == 0 {
         println!("No files found");
         std::process::exit(1);
     }
+
+    println!("{:#?}", filenames);
 
     for path in filenames.iter() {
 
@@ -55,12 +62,15 @@ fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
 
             fs::rename(path, &new_name)?;
 
-            println!("{} =====> {}", &path.to_string_lossy(), new_name);
+            println!("{} =====> {}", &path.to_string_lossy().magenta(), new_name.yellow());
 
+            count += 1;
         }
         
 
     }
+
+    println!("{} files found matching pattern, {} files renamed.", filenames.len(), count);
 
     Ok(())
     
