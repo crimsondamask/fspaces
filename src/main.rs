@@ -13,6 +13,8 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     if args.len() != 2 {
+        writeln!(std::io::stderr(), "Error occured while parsing arguments")
+            .unwrap();
         writeln!(std::io::stderr(),
                 "Usage:\nfspaces [PATTERN]").unwrap();
         std::process::exit(1);
@@ -20,9 +22,10 @@ fn main() {
 
     let pattern = &args[1];
 
-    println!("Hello, world! {:?}", filenames(&pattern[..]));
+    //println!("Files found matching the pattern: \n{:#?}", filenames(&pattern[..]));
 
-    rename(filenames(&pattern[..]));
+    rename(filenames(&pattern[..]))
+        .expect("Couldn't rename files");
 }
 
 fn filenames(pattern: &str) -> Vec<PathBuf> {
@@ -31,16 +34,17 @@ fn filenames(pattern: &str) -> Vec<PathBuf> {
     for file in glob(pattern).expect("Error") {
         match file {
             Ok(path) => files.push(path),
-            Err(e) => println!("{}", e)
+            Err(e) => eprintln!("Error{}", e)
         }
     };
 
     files
 }
 
-fn rename(filenames: Vec<PathBuf>) -> Result<(), Box<Error>> {
+fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
     if filenames.len() == 0 {
         println!("No files found");
+        std::process::exit(1);
     }
 
     for path in filenames.iter() {
@@ -51,7 +55,7 @@ fn rename(filenames: Vec<PathBuf>) -> Result<(), Box<Error>> {
 
             fs::rename(path, &new_name)?;
 
-            println!("=====> {}", new_name);
+            println!("{} =====> {}", &path.to_string_lossy(), new_name);
 
         }
         
