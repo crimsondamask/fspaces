@@ -1,6 +1,5 @@
 extern crate glob;
 extern crate colored;
-
 use colored::Colorize;
 use std::error::Error;
 use std::str;
@@ -18,7 +17,7 @@ fn main() {
         writeln!(std::io::stderr(), "Error occured while parsing arguments")
             .unwrap();
         writeln!(std::io::stderr(),
-                "Usage:\nfspaces [PATTERN]").unwrap();
+                "USAGE:\nfspaces [PATTERN]").unwrap();
         std::process::exit(1);
     }
 
@@ -56,7 +55,7 @@ fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
 
     for path in filenames.iter() {
 
-        if path.to_string_lossy().contains(" ") {
+        if path.to_string_lossy().contains(" ") || path.to_string_lossy().contains("&") {
 
             let new_name = str::replace(&path.to_string_lossy(), " ", "_");
 
