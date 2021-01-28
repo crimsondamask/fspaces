@@ -17,3 +17,8 @@ Bash script execution time:
    usr time   55.57 millis  690.00 micros   54.88 millis 
    sys time   17.50 millis  406.00 micros   17.09 millis 
 ```
+fspaces execution time:
+```Executed in    5.22 millis    fish           external 
+   usr time    5.21 millis  366.00 micros    4.84 millis 
+   sys time    0.21 millis  208.00 micros    0.00 millis 
+```
