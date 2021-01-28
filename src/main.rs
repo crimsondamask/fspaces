@@ -55,14 +55,15 @@ fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
 
     for path in filenames.iter() {
 
-        if path.to_string_lossy().contains(" ") || path.to_string_lossy().contains("&") || path.to_string_lossy().contains("$") {
+        if path.to_string_lossy().contains(" ") || 
+            path.to_string_lossy().contains("&") || 
+            path.to_string_lossy().contains("$") || 
+            path.to_string_lossy().contains("~") ||
+            path.to_string_lossy().contains("@") 
+        {
 
             let new_name: String = path.to_string_lossy()
-                .chars()
-                .map(|x| match x {
-                    ' ' | '&' | '$' | '@' | '~' => '_',
-                    _ => x,
-                }).collect();
+                .replace(&[' ', '$', '@', '~', '&'][..], "");
 
             fs::rename(path, &new_name)?;
 
