@@ -2,7 +2,7 @@
 ## A fast command-line tool for removing unsafe characters from filenames
 
 White spaces in filenames are a pain in the ass when working with the command line. fspaces is a tool that 
-renames any number of files that match some provided pattern. It is written in Rust and optimized for speed.
+renames any number of files that match some provided pattern by removing whitespaces and other unsafe characters such as ```$``` and ```&```. It is written in Rust and optimized for speed.
 
 ## Usage
 
