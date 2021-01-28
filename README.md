@@ -10,8 +10,4 @@ fspaces takes the file name as the first argument, and it accespts familiar wild
 ```
 fspaces "*.pdf"
 ```
-```Executed in   69.74 millis    fish           external 
-   usr time   55.57 millis  690.00 micros   54.88 millis 
-   sys time   17.50 millis  406.00 micros   17.09 millis 
-```
-Testin this
+Comparing it to a bash script using the ```mv``` command, fspaces renamed 50 pdf files ten times faster than the bash script.
