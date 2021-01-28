@@ -60,11 +60,7 @@ fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
             let new_name: String = path.to_string_lossy()
                 .chars()
                 .map(|x| match x {
-                    ' ' => '_',
-                    '&' => '_',
-                    '@' => '_',
-                    '$' => '_',
-                    '~' => '-',
+                    ' ' | '&' | '$' | '@' | '~' => '_',
                     _ => x,
                 }).collect();
 
