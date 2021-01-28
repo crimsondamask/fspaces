@@ -10,7 +10,7 @@ fspaces takes the file name as the first argument, and it accespts familiar wild
 ```
 fspaces "*.pdf"
 ```
-Comparing it to a bash script that uses the ```mv``` command, fspaces renamed 50 pdf files ten times faster.
+Comparing it to a bash script that uses the ```mv``` command, fspaces renamed 50 pdf files 20 times faster.
 
 Bash script execution time:
 ```Executed in   69.74 millis    fish           external 
@@ -18,7 +18,7 @@ Bash script execution time:
    sys time   17.50 millis  406.00 micros   17.09 millis 
 ```
 fspaces execution time:
-```Executed in    5.22 millis    fish           external 
-   usr time    5.21 millis  366.00 micros    4.84 millis 
-   sys time    0.21 millis  208.00 micros    0.00 millis 
+```Executed in    3.24 millis    fish           external 
+   usr time    0.33 millis  326.00 micros    0.00 millis 
+   sys time    2.99 millis  180.00 micros    2.81 millis 
 ```
