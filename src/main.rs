@@ -61,11 +61,12 @@ fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
             path.to_string_lossy().contains("~") ||
             path.to_string_lossy().contains("~") ||
             path.to_string_lossy().contains("\'") ||
+            path.to_string_lossy().contains("=") ||
             path.to_string_lossy().contains("\"") 
         {
 
             let new_name: String = path.to_string_lossy()
-                .replace(&[' ', '$', '@', '~', '&', '\'', '\"'][..], "");
+                .replace(&[' ', '$', '@', '~', '=', '&', '\'', '\"'][..], "");
 
             fs::rename(path, &new_name)?;
 
