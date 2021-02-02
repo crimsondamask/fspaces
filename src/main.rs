@@ -11,9 +11,9 @@ use std::env;
 
 fn main() {
     
-    let args: Vec<String> = env::args().collect();
+    let patterns: Vec<String> = env::args().skip(1).collect();
 
-    if args.len() != 2 {
+    if patterns.len() == 0 {
         writeln!(std::io::stderr(), "Error occured while parsing arguments")
             .unwrap();
         writeln!(std::io::stderr(),
@@ -21,12 +21,14 @@ fn main() {
         std::process::exit(1);
     }
 
-    let pattern = &args[1];
-
     //println!("Files found matching the pattern: \n{:#?}", filenames(&pattern[..]));
 
-    rename(filenames(&pattern[..]))
-        .expect("Couldn't rename files");
+    for pattern in patterns.iter() {
+        
+        rename(filenames(&pattern[..]))
+            .expect("Couldn't rename files");
+
+    }
 }
 
 fn filenames(pattern: &str) -> Vec<PathBuf> {
