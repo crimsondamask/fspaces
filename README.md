@@ -10,6 +10,10 @@ fspaces takes the file name as the first argument, and it accespts familiar wild
 ```
 fspaces "*.pdf"
 ```
+fspaces can also accept input from pipes by adding the ```-p``` option.
+```
+ls | grep "podcast" | fspaces -p
+```
 Comparing it to a bash script that uses the ```mv``` command, fspaces renamed 50 pdf files 20 times faster.
 
 Bash script execution time:
