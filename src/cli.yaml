@@ -9,6 +9,5 @@ args:
         takes_value: false
     - PATTERN:
         required: true
-        index: 1
         multiple: true
 
