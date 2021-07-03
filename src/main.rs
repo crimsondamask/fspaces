@@ -1,16 +1,20 @@
 extern crate glob;
 extern crate colored;
+extern crate lazy_static;
 
 use std::io;
 use colored::Colorize;
 use std::error::Error;
 use std::str;
 use std::path::PathBuf;
-use glob::glob;
+use glob::glob_with;
+use glob::MatchOptions;
 //use std::io::Write;
 use std::fs;
 //use std::env;
 use clap::{App, load_yaml};
+use lazy_static::lazy_static;
+use regex::Regex;
 
 fn main() {
     
@@ -56,8 +60,14 @@ fn main() {
 
 fn filenames(pattern: &str) -> Vec<PathBuf> {
     
+    let options = MatchOptions {
+        case_sensitive: false,
+        require_literal_separator: false,
+        require_literal_leading_dot: false,
+    };
+
     let mut files = Vec::new();
-    for file in glob(pattern).expect("Error") {
+    for file in glob_with(pattern, options).unwrap(){
         match file {
             Ok(path) => files.push(path),
             Err(e) => eprintln!("Error{}", e)
@@ -69,7 +79,9 @@ fn filenames(pattern: &str) -> Vec<PathBuf> {
 
 fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
 
-    let mut count = 0;
+    lazy_static! {
+        static ref RE: Regex = Regex::new("[\\\\ $@~+&'\\{\\}\\[\\]%^*#]|[A-Z]").unwrap();
+    };
 
     if filenames.len() == 0 {
         println!("No files found");
@@ -78,36 +90,22 @@ fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
 
     //println!("{:#?}", filenames);
 
+    let mut count = 0_i32;
     for path in filenames.iter() {
 
-        if path.to_string_lossy().contains(" ") || 
-            path.to_string_lossy().contains("&") || 
-            path.to_string_lossy().contains("$") || 
-            path.to_string_lossy().contains("~") ||
-            path.to_string_lossy().contains("~") ||
-            path.to_string_lossy().contains("\'") ||
-            path.to_string_lossy().contains("=") ||
-            path.to_string_lossy().contains("\"") 
-        {
+        if RE.is_match(&path.to_string_lossy()) {
 
             let new_name: String = path.to_string_lossy()
-                .replace(&[' ', '$', '@', '~', '=', '&', '\'', '\"'][..], "");
+                .replace(&[' ', '$', '@', '~', '=', '&', '#', '*', '\'', '\"', '\\', '{', '}', '%', '[', ']', '^'][..], "")
+                .to_lowercase();
 
             fs::rename(path, &new_name)?;
-
-            println!("{}\t ===>\t {}", &path.to_string_lossy().magenta(), new_name.yellow());
-
             count += 1;
+
+            println!("{}\t{}\twas found and was renamed to\t{}", count.to_string().green(), &path.to_string_lossy().magenta(), new_name.yellow());
         }
         
 
     }
-
-    match count {
-        1 => println!("1 file found matching pattern and has been renamed."),
-        _ => println!("{} files found matching pattern and have been renamed.", count),
-    }
-
     Ok(())
-    
 }
