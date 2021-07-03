@@ -6,13 +6,13 @@ renames any number of files that match some provided pattern by removing whitesp
 
 ## Usage
 
-fspaces takes the file name as the first argument, and it accespts familiar wildcards such as "*"
+fspaces takes the file name as the first argument, and it accepts familiar wildcards such as "*"
 ```
-fspaces "*.pdf"
+fspaces "*.pdf" -i
 ```
-fspaces can also accept input from pipes by adding the ```-p``` option.
+fspaces can also accept input from pipes.
 ```
-ls | grep "podcast" | fspaces -p
+ls | fspaces "*.txt" 
 ```
 Comparing it to a bash script that uses the ```mv``` command, fspaces renamed 50 pdf files 20 times faster.
 
