@@ -1,0 +1,14 @@
+name: fspaces
+version: "2.0"
+author: Abdelkader Madoui. <abdelkadermadoui@gmail.com>
+about: A light-weight and fast command line utility that removes unsafe characters from file names. 
+args:
+    - input:
+        short: i
+        long: input
+        takes_value: false
+    - PATTERN:
+        required: true
+        index: 1
+        multiple: true
+

@@ -7,15 +7,25 @@ use std::error::Error;
 use std::str;
 use std::path::PathBuf;
 use glob::glob;
-use std::io::Write;
+//use std::io::Write;
 use std::fs;
-use std::env;
+//use std::env;
+use clap::{App, load_yaml};
 
 fn main() {
     
-    let patterns: Vec<String> = env::args().skip(1).collect();
+    let yaml = load_yaml!("cli.yaml");
+    let matches = App::from(yaml).get_matches();
 
-    if patterns.len() == 1 && patterns[0] == "-p" {
+    if matches.is_present("input") {
+
+        for pattern in matches.values_of("PATTERN").unwrap() {
+
+            rename(filenames(&pattern[..]))
+                .expect("Couldn't rename files");
+        }
+
+    } else {
 
         let mut files = Vec::new();
         loop {
@@ -34,35 +44,15 @@ fn main() {
                 }
             }
         }
+
         for file in files.iter() {
 
             rename(filenames(&file[..]))
                 .expect("Couldn't rename files");
-
         }
-
-    } else if patterns.len() != 0 {
-
-        for pattern in patterns.iter() {
-            
-            rename(filenames(&pattern[..]))
-                .expect("Couldn't rename files");
-
-        }
-
-    } else {
-        
-        writeln!(std::io::stderr(), "fspaces: Error occured while parsing arguments")
-            .unwrap();
-        writeln!(std::io::stderr(),
-                "USAGE:\nfspaces [PATTERN]").unwrap();
-        std::process::exit(1);
-
-    }
-
-    //println!("Files found matching the pattern: \n{:#?}", filenames(&pattern[..]));
-
+    } 
 }
+
 
 fn filenames(pattern: &str) -> Vec<PathBuf> {
     
@@ -105,7 +95,7 @@ fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
 
             fs::rename(path, &new_name)?;
 
-            println!("{} =====> {}", &path.to_string_lossy().magenta(), new_name.yellow());
+            println!("{}\t ===>\t {}", &path.to_string_lossy().magenta(), new_name.yellow());
 
             count += 1;
         }
@@ -113,7 +103,10 @@ fn rename(filenames: Vec<PathBuf>) -> Result<(), Box <dyn Error>> {
 
     }
 
-    println!("{} files found matching pattern, {} files renamed.", filenames.len(), count);
+    match count {
+        1 => println!("1 file found matching pattern and has been renamed."),
+        _ => println!("{} files found matching pattern and have been renamed.", count),
+    }
 
     Ok(())
     
